@@ -11,7 +11,7 @@ Quick encoding and reading example for string.
 
 Server Side - send command (0x01,0x01,0x01) 1,1,1 [cubic byte commands]
 ```java
-= Transmission.encodeMessage(new byte[]{0x01,0x01,0x01},"Hello world".getBytes());
+byte[] message = Transmission.encodeMessage(new byte[]{0x01,0x01,0x01},"Hello world".getBytes());
 Socket.getOutputStream().write(message);
 Socket.getOutputStream().flush();
 ```
