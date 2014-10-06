@@ -27,6 +27,7 @@ while((readBytes=socket.read(buffer))!=1){
     && message.getCommand()[2]==0x01)
   {
     String stringMessage = new String(message.getValue());
+    System.out.println(stringMessage); // prints Hello world
   }
 }
 ```
