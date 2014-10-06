@@ -6,6 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server extends ServerSocket {
+    public int maxOpenClients = 100;
+    public int openClients = 0;
+    public class ThreadedAccept implements Runnable{
+        Server s;
+        public ThreadedAccept(Server s){
+            this.s = s;
+        }
+        public void run() {
+            try {
+                Client client = new Client(s.accept());
+                connectedClients.add(client);
+                client.handle();
+                openClients--;
+                connectedClients.remove(client);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public List<Client> connectedClients = new ArrayList<Client>();
 
     public Server(int port) throws IOException {
@@ -14,12 +33,9 @@ public class Server extends ServerSocket {
 
     public void run() {
         while (!this.isClosed()) {
-            try {
-                Client client = new Client(this.accept());
-                client.handle();
-                connectedClients.add(client);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(openClients<maxOpenClients){
+                (new Thread(new ThreadedAccept(this))).start();
+                openClients++;
             }
         }
     }
